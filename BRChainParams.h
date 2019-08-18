@@ -67,9 +67,7 @@ static const BRCheckPoint BRMainNetCheckpoints[] = {
     {  80640, uint256("acb0793326c46512b06b7fa80c751c82c52a3c0f83432c8bdd88f4db93b5ed7d"), 1563078552, 0x1b051662 },
     { 100800, uint256("cf08e247757de18ff24a4a2bcd621246913f77fd6df006eb03960c1d3a533f2b"), 1564292359, 0x1b06ce8b },
     { 120960, uint256("f3e04a20513c141c8370e14aae757902807bfa1edd71598ea067514afe791380"), 1565506938, 0x1b0598d8 },
-    { 131542, uint256("0e2f8579edeadb338adbf221ec027f3ef36cd337f23213b41d48c6a52c8e87c2"), 1566143580, 0x1b05d948 },
-
-    //{ 564480,
+    { 131542, uint256("0e2f8579edeadb338adbf221ec027f3ef36cd337f23213b41d48c6a52c8e87c2"), 1566143580, 0x1b05d948 }
 };
 
 static const BRCheckPoint BRTestNetCheckpoints[] = {
@@ -88,25 +86,10 @@ static const BRCheckPoint BRTestNetCheckpoints[] = {
     { 1209600, uint256("0000000000000026b4692a26f1651bec8e9d4905640bd8e56056c9a9c53badf8"), 1507353706, 0x1973e180 },
     { 1310400, uint256("0000000000013b434bbe5668293c92ef26df6d6d4843228e8958f6a3d8101709"), 1527063804, 0x1b0ffff0 },
     { 1411200, uint256("00000000000000008b3baea0c3de24b9333c169e1543874f4202397f5b8502cb"), 1535560970, 0x194ac105 }
-    //{ 1512000, 
 };
 
 static int BRMainNetVerifyDifficulty(const BRMerkleBlock *block, const BRSet *blockSet) {
-    const BRMerkleBlock *previous, *b = NULL;
-    uint32_t i;
-
-    assert(block != NULL);
-    assert(blockSet != NULL);
-
-    // check if we hit a difficulty transition, and find previous transition block
-    if ((block->height % BLOCK_DIFFICULTY_INTERVAL) == 0) {
-        for (i = 0, b = block; b && i < BLOCK_DIFFICULTY_INTERVAL; i++) {
-            b = BRSetGet(blockSet, &b->prevBlock);
-        }
-    }
-
-    previous = BRSetGet(blockSet, &block->prevBlock);
-    return BRMerkleBlockVerifyDifficulty(block, previous, (b) ? b->timestamp : 0);
+    return 1; // skip diff check for now
 }
 
 static int BRTestNetVerifyDifficulty(const BRMerkleBlock *block, const BRSet *blockSet) {
@@ -115,8 +98,8 @@ static int BRTestNetVerifyDifficulty(const BRMerkleBlock *block, const BRSet *bl
 
 static const BRChainParams BRMainNetParams = {
     BRMainNetDNSSeeds,
-    8333,                  // standardPort
-    0xd9b4bef9,            // magicNumber
+    56740,                  // standardPort
+    0x191642a0,            // magicNumber
     SERVICES_NODE_WITNESS, // services
     BRMainNetVerifyDifficulty,
     BRMainNetCheckpoints,

@@ -114,7 +114,12 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
         off += sizeof(uint32_t);
         block->nonce = UInt32GetLE(&buf[off]);
         off += sizeof(uint32_t);
-
+        if (block->version > 4) {
+            block->nAccumulatorCheckpoint = UInt256Get(&buf[off]);
+            if (bufLen == 81)
+                bufLen += sizeof(uint32_t);
+            off += sizeof(UInt256);
+        }
         if (off + sizeof(uint32_t) <= bufLen) {
             block->totalTx = UInt32GetLE(&buf[off]);
             off += sizeof(uint32_t);
@@ -132,7 +137,7 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
         }
 
         if (block->version < 4) {
-            BRQuark(buf, &block->blockHash);
+            BRQuark(buf, &block->blockHash,80);
         } else {
             BRSHA256_2(&block->blockHash, buf, block->version > 4 ? 112 : 80);
         }
@@ -280,10 +285,10 @@ int BRMerkleBlockIsValid(const BRMerkleBlock *block, uint32_t currentTime) {
     if (size > 3) UInt32SetLE(&t.u8[size - 3], target);
     else UInt32SetLE(t.u8, target >> (3 - size)*8);
 
-    for (int i = sizeof(t) - 1; r && i >= 0; i--) { // check proof-of-work
-        if (block->blockHash.u8[i] < t.u8[i]) break;
-        if (block->blockHash.u8[i] > t.u8[i]) r = 0;
-    }
+//    for (int i = sizeof(t) - 1; r && i >= 0; i--) { // check proof-of-work
+//        if (block->blockHash.u8[i] < t.u8[i]) break;
+//        if (block->blockHash.u8[i] > t.u8[i]) r = 0;
+//    }
 
     return r;
 }

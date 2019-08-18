@@ -1060,11 +1060,12 @@ static int _BRPeerManagerVerifyBlock(BRPeerManager *manager, BRMerkleBlock *bloc
     }
 
     // verify block difficulty
-    if (r && ! manager->params->verifyDifficulty(block, manager->blocks)) {
-        peer_log(peer, "relayed block with invalid difficulty target %x, blockHash: %s", block->target,
-                 u256hex(block->blockHash));
-        r = 0;
-    }
+    //Skip DGW3 diff checks on dogec
+//    if (r && ! manager->params->verifyDifficulty(block, manager->blocks)) {
+//        peer_log(peer, "relayed block with invalid difficulty target %x, blockHash: %s", block->target,
+//                 u256hex(block->blockHash));
+//        r = 0;
+//    }
 
     if (r) {
         BRMerkleBlock *checkpoint = BRSetGet(manager->checkpoints, block);
