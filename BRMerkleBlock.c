@@ -131,7 +131,11 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
             if (block->flags) memcpy(block->flags, &buf[off], len);
         }
 
-        BRSHA256_2(&block->blockHash, buf, 80);
+        if (block->version < 4) {
+            BRQuark(buf, &block->blockHash);
+        } else {
+            BRSHA256_2(&block->blockHash, buf, block->version > 4 ? 112 : 80);
+        }
     }
 
     return block;
