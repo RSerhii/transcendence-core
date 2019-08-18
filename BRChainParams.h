@@ -49,7 +49,7 @@ typedef struct {
 } BRChainParams;
 
 static const char *BRMainNetDNSSeeds[] = {
-"seeds.dogec.io","seeds.dogec.xyz","x9.seeds.dogec.io", NULL
+"80.211.71.14",NULL
 };
 
 static const char *BRTestNetDNSSeeds[] = {
@@ -99,8 +99,8 @@ static int BRTestNetVerifyDifficulty(const BRMerkleBlock *block, const BRSet *bl
 static const BRChainParams BRMainNetParams = {
     BRMainNetDNSSeeds,
     56740,                  // standardPort
-    0x191642a0,            // magicNumber
-    SERVICES_NODE_WITNESS, // services
+    0x191643a0,            // magicNumber
+    0, // services
     BRMainNetVerifyDifficulty,
     BRMainNetCheckpoints,
     sizeof(BRMainNetCheckpoints)/sizeof(*BRMainNetCheckpoints)
@@ -110,7 +110,7 @@ static const BRChainParams BRTestNetParams = {
     BRTestNetDNSSeeds,
     18333,                 // standardPort
     0x0709110b,            // magicNumber
-    SERVICES_NODE_WITNESS, // services
+    0, // services
     BRTestNetVerifyDifficulty,
     BRTestNetCheckpoints,
     sizeof(BRTestNetCheckpoints)/sizeof(*BRTestNetCheckpoints)
