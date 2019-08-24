@@ -76,10 +76,7 @@ BRMerkleBlock *BRMerkleBlockNew(void) {
     BRMerkleBlock *block = calloc(1, sizeof(*block));
 
     assert(block != NULL);
-//    UInt256 zerocoinAcc = (zerocoinAccumulator!=nil && zerocoinAccumulator.length == sizeof(UInt256)) ? *(const UInt256 *)zerocoinAccumulator.bytes : UINT256_ZERO;
-    block->nAccumulatorCheckpoint = UINT256_ZERO;
     block->height = BLOCK_UNKNOWN_HEIGHT;
-//    block->version = 5;
     return block;
 }
 
