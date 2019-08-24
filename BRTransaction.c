@@ -111,7 +111,7 @@ void BRTxInputSetWitness(BRTxInput *input, const uint8_t *witness, size_t witLen
 static size_t _BRTxInputData(const BRTxInput *input, uint8_t *data, size_t dataLen)
 {
     size_t off = 0;
-    
+
     if (data && off + sizeof(UInt256) <= dataLen) memcpy(&data[off], &input->txHash, sizeof(UInt256)); // previous out
     off += sizeof(UInt256);
     if (data && off + sizeof(uint32_t) <= dataLen) UInt32SetLE(&data[off], input->index);
@@ -266,7 +266,7 @@ static size_t _BRTransactionData(const BRTransaction *tx, uint8_t *data, size_t 
     BRTxInput input;
     int anyoneCanPay = (hashType & SIGHASH_ANYONECANPAY), sigHash = (hashType & 0x1f);
     size_t i, off = 0;
-    
+
     if (anyoneCanPay && index >= tx->inCount) return 0;
     if (data && off + sizeof(uint32_t) <= dataLen) UInt32SetLE(&data[off], tx->version); // tx version
     off += sizeof(uint32_t);
@@ -317,7 +317,7 @@ static size_t _BRTransactionData(const BRTransaction *tx, uint8_t *data, size_t 
         off += _BRTransactionOutputData(tx, (data ? &data[off] : NULL), (off <= dataLen ? dataLen - off : 0), index);
     }
     else off += BRVarIntSet((data ? &data[off] : NULL), (off <= dataLen ? dataLen - off : 0), 0); //SIGHASH_NONE outputs
-    
+
     if (data && off + sizeof(uint32_t) <= dataLen) UInt32SetLE(&data[off], tx->lockTime); // locktime
     off += sizeof(uint32_t);
     
@@ -509,7 +509,7 @@ size_t BRTransactionSize(const BRTransaction *tx)
 {
     BRTxInput *input;
     size_t size;
-    
+
     assert(tx != NULL);
     size = (tx) ? 8 + BRVarIntSize(tx->inCount) + BRVarIntSize(tx->outCount) : 0;
     
@@ -525,7 +525,7 @@ size_t BRTransactionSize(const BRTransaction *tx)
     for (size_t i = 0; tx && i < tx->outCount; i++) {
         size += sizeof(uint64_t) + BRVarIntSize(tx->outputs[i].scriptLen) + tx->outputs[i].scriptLen;
     }
-    
+
     return size;
 }
 
