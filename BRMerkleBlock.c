@@ -116,6 +116,8 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
         if ( block->version > 4 ) {
             block->nAccumulatorCheckpoint = UInt256Get(&buf[off]);
             off += sizeof(UInt256);
+//            if (bufLen == 81)
+//                bufLen += sizeof(UInt256);
         }
         if (off + sizeof(uint32_t) <= bufLen) {
             block->totalTx = UInt32GetLE(&buf[off]);
@@ -132,7 +134,7 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
             block->flags = (off + len <= bufLen) ? malloc(len) : NULL;
             if (block->flags) memcpy(block->flags, &buf[off], len);
         }
-        if ( block->version < 5 ) {
+        if ( block->version < 4 ) {
             BRQuark(buf, &block->blockHash);       // hash function for block hash
         }
         else {
