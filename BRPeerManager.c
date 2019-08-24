@@ -1146,7 +1146,8 @@ static void _peerRelayedBlock(void *info, BRMerkleBlock *block) {
         if (block->timestamp + 7*24*60*60 < time(NULL)) { // ignore orphans older than one week ago
             BRMerkleBlockFree(block);
             block = NULL;
-        } else {
+        }
+        else {
             // call getblocks, unless we already did with the previous block, or we're still syncing
             if (manager->lastBlock->height >= BRPeerLastBlock(peer) &&
                     (! manager->lastOrphan || ! UInt256Eq(manager->lastOrphan->blockHash, block->prevBlock))) {
@@ -1161,12 +1162,8 @@ static void _peerRelayedBlock(void *info, BRMerkleBlock *block) {
             BRSetAdd(manager->orphans, block); // BUG: limit total orphans to avoid memory exhaustion attack
             manager->lastOrphan = block;
         }
-    } else if (! _BRPeerManagerVerifyBlock(manager, block, prev, peer)) { // block is invalid
-        peer_log(peer, "relayed invalid block");
-        BRMerkleBlockFree(block);
-        block = NULL;
-        _BRPeerManagerPeerMisbehavin(manager, peer);
-    } else if (UInt256Eq(block->prevBlock, manager->lastBlock->blockHash)) { // new block extends main chain
+    }
+    else if (UInt256Eq(block->prevBlock, manager->lastBlock->blockHash)) { // new block extends main chain
         if ((block->height % 500) == 0 || txCount > 0 || block->height >= BRPeerLastBlock(peer)) {
             peer_log(peer, "adding block #%"PRIu32", false positive rate: %f", block->height, manager->fpRate);
         }

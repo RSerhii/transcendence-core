@@ -479,11 +479,7 @@ static int _BRPeerAcceptHeadersMessage(BRPeer *peer, const uint8_t *msg, size_t 
                     peer_log(peer, "malformed headers message with length: %zu", msgLen);
                     r = 0;
                 }
-                else if (! BRMerkleBlockIsValid(block, (uint32_t)now)) {
-                    peer_log(peer, "invalid block header: %s", u256hex(block->blockHash));
-                    BRMerkleBlockFree(block);
-                    r = 0;
-                } else if (ctx->relayedBlock) {
+                else if (ctx->relayedBlock) {
                     ctx->relayedBlock(ctx->info, block);
                 } else BRMerkleBlockFree(block);
             }
@@ -687,12 +683,8 @@ static int _BRPeerAcceptMerkleblockMessage(BRPeer *peer, const uint8_t *msg, siz
     if (! block) {
         peer_log(peer, "malformed merkleblock message with length: %zu", msgLen);
         r = 0;
-    } else if (! BRMerkleBlockIsValid(block, (uint32_t)time(NULL))) {
-        peer_log(peer, "invalid merkleblock: %s", u256hex(block->blockHash));
-        BRMerkleBlockFree(block);
-        block = NULL;
-        r = 0;
-    } else if (! ctx->sentFilter && ! ctx->sentGetdata) {
+    }
+    else if (! ctx->sentFilter && ! ctx->sentGetdata) {
         peer_log(peer, "got merkleblock message before loading a filter");
         BRMerkleBlockFree(block);
         block = NULL;
@@ -803,7 +795,7 @@ static int _BRPeerAcceptMessage(BRPeer *peer, const uint8_t *msg, size_t msgLen,
         r = 0;
     } else if (strncmp(MSG_VERSION, type, 12) == 0) r = _BRPeerAcceptVersionMessage(peer, msg, msgLen);
     else if (strncmp(MSG_VERACK, type, 12) == 0) r = _BRPeerAcceptVerackMessage(peer, msg, msgLen);
-    else if (strncmp(MSG_ADDR, type, 12) == 0) r = _BRPeerAcceptAddrMessage(peer, msg, msgLen);
+//    else if (strncmp(MSG_ADDR, type, 12) == 0) r = _BRPeerAcceptAddrMessage(peer, msg, msgLen);
     else if (strncmp(MSG_INV, type, 12) == 0) r = _BRPeerAcceptInvMessage(peer, msg, msgLen);
     else if (strncmp(MSG_TX, type, 12) == 0) r = _BRPeerAcceptTxMessage(peer, msg, msgLen);
     else if (strncmp(MSG_HEADERS, type, 12) == 0) r = _BRPeerAcceptHeadersMessage(peer, msg, msgLen);
@@ -1489,7 +1481,7 @@ void BRPeerSendGetdata(BRPeer *peer, const UInt256 txHashes[], size_t txCount, c
         off += BRVarIntSet(&msg[off], (off <= msgLen ? msgLen - off : 0), count);
 
         for (i = 0; i < txCount; i++) {
-            UInt32SetLE(&msg[off], inv_witness_tx);
+            UInt32SetLE(&msg[off], inv_tx);
             off += sizeof(uint32_t);
             UInt256Set(&msg[off], txHashes[i]);
             off += sizeof(UInt256);

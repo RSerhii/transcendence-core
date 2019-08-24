@@ -76,8 +76,10 @@ BRMerkleBlock *BRMerkleBlockNew(void) {
     BRMerkleBlock *block = calloc(1, sizeof(*block));
 
     assert(block != NULL);
-
+//    UInt256 zerocoinAcc = (zerocoinAccumulator!=nil && zerocoinAccumulator.length == sizeof(UInt256)) ? *(const UInt256 *)zerocoinAccumulator.bytes : UINT256_ZERO;
+    block->nAccumulatorCheckpoint = UINT256_ZERO;
     block->height = BLOCK_UNKNOWN_HEIGHT;
+//    block->version = 5;
     return block;
 }
 
@@ -114,10 +116,8 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
         off += sizeof(uint32_t);
         block->nonce = UInt32GetLE(&buf[off]);
         off += sizeof(uint32_t);
-        if (block->version == 5) {
+        if ( block->version > 4 ) {
             block->nAccumulatorCheckpoint = UInt256Get(&buf[off]);
-            if (bufLen == 81)
-                bufLen += sizeof(uint32_t);
             off += sizeof(UInt256);
         }
         if (off + sizeof(uint32_t) <= bufLen) {
@@ -135,13 +135,11 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
             block->flags = (off + len <= bufLen) ? malloc(len) : NULL;
             if (block->flags) memcpy(block->flags, &buf[off], len);
         }
-
-        if(block->version == 5){
-            BRSHA256_2(&block->blockHash, buf,112);
+        if ( block->version < 5 ) {
+            BRQuark(buf, &block->blockHash);       // hash function for block hash
         }
-        else{
-            BRQuark(buf, &block->blockHash);
-
+        else {
+            BRSHA256_2(&block->blockHash, buf, 112);     // 80 + Uint256 nAccumulatorCheckpoint
         }
     }
 

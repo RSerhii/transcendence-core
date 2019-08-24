@@ -676,7 +676,8 @@ BRTransaction *BRWalletCreateTxForOutputs(BRWallet *wallet, const BRTxOutput out
 // signs any inputs in tx that can be signed using private keys from the wallet
 // seed is the master private key (wallet seed) corresponding to the master public key given when the wallet was created
 // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
-int BRWalletSignTransaction(BRWallet *wallet, BRTransaction *tx, const void *seed, size_t seedLen) {
+int BRWalletSignTransaction(BRWallet *wallet, BRTransaction *tx, const void *seed, size_t seedLen)
+{
     uint32_t j, internalIdx[tx->inCount], externalIdx[tx->inCount];
     size_t i, internalCount = 0, externalCount = 0;
     int forkId, r = 0;
@@ -688,20 +689,20 @@ int BRWalletSignTransaction(BRWallet *wallet, BRTransaction *tx, const void *see
     
     for (i = 0; tx && i < tx->inCount; i++) {
         const uint8_t *pkh = BRScriptPKH(tx->inputs[i].script, tx->inputs[i].scriptLen);
-
+        
         for (j = (uint32_t)array_count(wallet->internalChain); pkh && j > 0; j--) {
             if (UInt160Eq(UInt160Get(pkh), wallet->internalChain[j - 1])) internalIdx[internalCount++] = j - 1;
         }
-
+        
         for (j = (uint32_t)array_count(wallet->externalChain); pkh && j > 0; j--) {
             if (UInt160Eq(UInt160Get(pkh), wallet->externalChain[j - 1])) externalIdx[externalCount++] = j - 1;
         }
     }
-
+    
     pthread_mutex_unlock(&wallet->lock);
-
+    
     BRKey keys[internalCount + externalCount];
-
+    
     if (seed) {
         BRBIP32PrivKeyList(keys, internalCount, seed, seedLen, SEQUENCE_INTERNAL_CHAIN, internalIdx);
         BRBIP32PrivKeyList(&keys[internalCount], externalCount, seed, seedLen, SEQUENCE_EXTERNAL_CHAIN, externalIdx);
@@ -709,8 +710,9 @@ int BRWalletSignTransaction(BRWallet *wallet, BRTransaction *tx, const void *see
         seed = NULL;
         if (tx) r = BRTransactionSign(tx, forkId, keys, internalCount + externalCount);
         for (i = 0; i < internalCount + externalCount; i++) BRKeyClean(&keys[i]);
-    } else r = -1; // user canceled authentication
-
+    }
+    else r = -1; // user canceled authentication
+    
     return r;
 }
 
