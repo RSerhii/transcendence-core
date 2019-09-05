@@ -49,7 +49,7 @@ typedef struct {
 } BRChainParams;
 
 static const char *BRMainNetDNSSeeds[] = {
-"159.69.33.171","95.216.152.134",NULL
+"167.86.91.19","169.0.106.122",NULL
 };
 
 static const char *BRTestNetDNSSeeds[] = {
@@ -102,7 +102,7 @@ static int BRTestNetVerifyDifficulty(const BRMerkleBlock *block, const BRSet *bl
 static const BRChainParams BRMainNetParams = {
     BRMainNetDNSSeeds,
     8051,                  // standardPort
-    0x191643a0,            // magicNumber
+    0x534C4554,            // magicNumber
     0, // services
     BRMainNetVerifyDifficulty,
     BRMainNetCheckpoints,
