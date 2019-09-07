@@ -201,6 +201,9 @@ void BRSHA256_2(void *md32, const void *data, size_t dataLen) {
 void BRQuark(const char* input, char* output) {
 quark_hash(input, output);
 }
+void BRXevan(const char* input, char* output) {
+    xevan_hash(input, output);
+}
 
 // bitwise right rotation
 #define ror64(a, b) (((a) >> (b)) | ((a) << (64 - (b))))
