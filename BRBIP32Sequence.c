@@ -27,7 +27,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define BIP32_SEED_KEY "DogeCash seed"
+#define BIP32_SEED_KEY "Telos seed"
 #define BIP32_XPRV     "\x04\x88\xAD\xE4"
 #define BIP32_XPUB     "\x04\x88\xB2\x1E"
 
