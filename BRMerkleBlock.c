@@ -133,7 +133,7 @@ BRMerkleBlock *BRMerkleBlockParse(const uint8_t *buf, size_t bufLen) {
             if (block->flags) memcpy(block->flags, &buf[off], len);
         }
         if ( block->version < 4 ) {
-            BRXevan(buf, &block->blockHash);       // hash function for block hash
+            BRQuark(buf, &block->blockHash);       // hash function for block hash
         }
         else {
             BRSHA256_2(&block->blockHash, buf, 112);     // 80 + Uint256 nAccumulatorCheckpoint
