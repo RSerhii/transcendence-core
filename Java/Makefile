@@ -5,19 +5,19 @@ CINC_DIR=/usr/include
 
 JNI_LIB=libCore.jnilib
 
-JNI_SRCS=co_transcendencewallet_core_BRCoreAddress.c \
-	co_transcendencewallet_core_BRCoreChainParams.c \
-	co_transcendencewallet_core_BRCoreJniReference.c \
-	co_transcendencewallet_core_BRCoreKey.c \
-	co_transcendencewallet_core_BRCoreMasterPubKey.c \
-	co_transcendencewallet_core_BRCoreMerkleBlock.c \
-	co_transcendencewallet_core_BRCorePaymentProtocol.c \
-	co_transcendencewallet_core_BRCorePeer.c \
-	co_transcendencewallet_core_BRCorePeerManager.c \
-	co_transcendencewallet_core_BRCoreTransaction.c \
-	co_transcendencewallet_core_BRCoreTransactionInput.c \
-	co_transcendencewallet_core_BRCoreTransactionOutput.c \
-	co_transcendencewallet_core_BRCoreWallet.c \
+JNI_SRCS=co_hodlwallet_core_BRCoreAddress.c \
+	co_hodlwallet_core_BRCoreChainParams.c \
+	co_hodlwallet_core_BRCoreJniReference.c \
+	co_hodlwallet_core_BRCoreKey.c \
+	co_hodlwallet_core_BRCoreMasterPubKey.c \
+	co_hodlwallet_core_BRCoreMerkleBlock.c \
+	co_hodlwallet_core_BRCorePaymentProtocol.c \
+	co_hodlwallet_core_BRCorePeer.c \
+	co_hodlwallet_core_BRCorePeerManager.c \
+	co_hodlwallet_core_BRCoreTransaction.c \
+	co_hodlwallet_core_BRCoreTransactionInput.c \
+	co_hodlwallet_core_BRCoreTransactionOutput.c \
+	co_hodlwallet_core_BRCoreWallet.c \
 	BRCoreJni.c
 
 JNI_OBJS=$(JNI_SRCS:.c=.o)
@@ -25,26 +25,26 @@ JNI_OBJS=$(JNI_SRCS:.c=.o)
 # JNI Header Files that we are interest in keeping (that are not empty)
 JNI_HDRS=$(JNI_SRCS:.c=.h)
 
-JAVA_SRCS=co/transcendencewallet/core/BRCoreAddress.java \
-	co/transcendencewallet/core/BRCoreChainParams.java \
-	co/transcendencewallet/core/BRCoreJniReference.java \
-	co/transcendencewallet/core/BRCoreKey.java \
-	co/transcendencewallet/core/BRCoreMasterPubKey.java \
-	co/transcendencewallet/core/BRCoreMerkleBlock.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolEncryptedMessage.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolInvoiceRequest.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolMessage.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolPayment.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolACK.java \
-	co/transcendencewallet/core/BRCorePaymentProtocolRequest.java \
-	co/transcendencewallet/core/BRCorePeer.java \
-	co/transcendencewallet/core/BRCorePeerManager.java \
-	co/transcendencewallet/core/BRCoreTransaction.java \
-	co/transcendencewallet/core/BRCoreTransactionInput.java \
-	co/transcendencewallet/core/BRCoreTransactionOutput.java \
-	co/transcendencewallet/core/BRCoreWallet.java \
-	co/transcendencewallet/core/BRCoreWalletManager.java \
-	co/transcendencewallet/core/test/BRWalletManager.java
+JAVA_SRCS=co/hodlwallet/core/BRCoreAddress.java \
+	co/hodlwallet/core/BRCoreChainParams.java \
+	co/hodlwallet/core/BRCoreJniReference.java \
+	co/hodlwallet/core/BRCoreKey.java \
+	co/hodlwallet/core/BRCoreMasterPubKey.java \
+	co/hodlwallet/core/BRCoreMerkleBlock.java \
+	co/hodlwallet/core/BRCorePaymentProtocolEncryptedMessage.java \
+	co/hodlwallet/core/BRCorePaymentProtocolInvoiceRequest.java \
+	co/hodlwallet/core/BRCorePaymentProtocolMessage.java \
+	co/hodlwallet/core/BRCorePaymentProtocolPayment.java \
+	co/hodlwallet/core/BRCorePaymentProtocolACK.java \
+	co/hodlwallet/core/BRCorePaymentProtocolRequest.java \
+	co/hodlwallet/core/BRCorePeer.java \
+	co/hodlwallet/core/BRCorePeerManager.java \
+	co/hodlwallet/core/BRCoreTransaction.java \
+	co/hodlwallet/core/BRCoreTransactionInput.java \
+	co/hodlwallet/core/BRCoreTransactionOutput.java \
+	co/hodlwallet/core/BRCoreWallet.java \
+	co/hodlwallet/core/BRCoreWalletManager.java \
+	co/hodlwallet/core/test/BRWalletManager.java
 
 JAVA_OBJS=$(JAVA_SRCS:.java=.class)
 
@@ -81,12 +81,12 @@ compile: $(JNI_LIB) java_comp
 
 test: $(JNI_LIB) java_comp
 	java -Xss1m -Dwallet.test -classpath build -Djava.library.path=. \
-		 co.transcendencewallet.core.test.BRWalletManager $(ARGS) # -D.
+		 co.hodlwallet.core.test.BRWalletManager $(ARGS) # -D.
 
 debug: $(JNI_LIB) java_comp
 	java -Xss1m -Xdebug -Xrunjdwp:transport=dt_socket,address=8008,server=y,suspend=n \
 		 -Dwallet.test -classpath build -Djava.library.path=. \
-		 co.transcendencewallet.core.test.BRWalletManager $(ARGS) # -D.
+		 co.hodlwallet.core.test.BRWalletManager $(ARGS) # -D.
 
 $(JNI_LIB): $(JNI_OBJS) $(CORE_OBJS)
 	cc -dynamiclib -o $(JNI_LIB) $(JNI_OBJS) $(CORE_OBJS)
@@ -96,11 +96,11 @@ java_comp:	FORCE
 	javac -d build $(JAVA_SRCS)
 
 jni_hdr: java_comp
-	@(cd build/co/transcendencewallet/core; \
+	@(cd build/co/hodlwallet/core; \
 	  for class in BRCore*.class; do \
-	      javah -jni -d $(DIR) -classpath $(DIR)/build co.transcendencewallet.core.$${class%%.class}; \
+	      javah -jni -d $(DIR) -classpath $(DIR)/build co.hodlwallet.core.$${class%%.class}; \
 	  done)
-	@rm -f co_transcendencewallet_core_BRCoreWalletManager.h co_transcendencewallet_core_BRCore*_*.h .h
+	@rm -f co_hodlwallet_core_BRCoreWalletManager.h co_hodlwallet_core_BRCore*_*.h .h
 
 #            if [[ "$${class}" != "*\"$\"*" ]]; then
 #           fi
@@ -129,8 +129,8 @@ FORCE:
 #
 
 # (cd ${APP}/app/build/intermediates/classes/debug/com/hodlallet/core; for class in BRCore*.class; do \
-#     javah -jni -d ${APP}/app/src/main/jni/transcendencewallet-core/Java/ \
+#     javah -jni -d ${APP}/app/src/main/jni/hodlwallet-core/Java/ \
 #	-classpath ${APP}/app/build/intermediates/classes/debug/ \
-#	co.transcendencewallet.core.${class%%.class}; \
+#	co.hodlwallet.core.${class%%.class}; \
 #	done)
 # 15RBcXQMTfebbAfUFeBbcDfs1fVvPayWdU
