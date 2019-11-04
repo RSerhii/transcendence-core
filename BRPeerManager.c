@@ -38,6 +38,7 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <resolv.h>
 
 #define PROTOCOL_TIMEOUT      20.0
 #define MAX_CONNECT_FAILURES  20 // notify user of network problems after this many connect failures in a row
@@ -584,30 +585,44 @@ static void _BRPeerManagerLoadMempools(BRPeerManager *manager) {
     }
 }
 
+static void _parseNameServer(ns_msg handle, int index, UInt128 *addrList)
+{
+    ns_rr record;
+    if (ns_parserr(&handle, ns_s_an, index, &record) == 0) {   
+        uint8_t *data = (uint8_t*)ns_rr_rdata(record);
+        addrList[index].u16[5] = 0xffff;
+        for (int i = 0; i < ns_rr_rdlen(record); i++) {
+            addrList[index].u8[12 + i] = data[i];
+        }
+    }
+}
+
 // returns a UINT128_ZERO terminated array of addresses for hostname that must be freed, or NULL if lookup failed
-static UInt128 *_addressLookup(const char *hostname) {
-    struct addrinfo *servinfo, *p;
+static UInt128 *_addressLookup(const char *hostname)
+{
     UInt128 *addrList = NULL;
-    size_t count = 0, i = 0;
-
-    if (getaddrinfo(hostname, NULL, NULL, &servinfo) == 0) {
-        for (p = servinfo; p != NULL; p = p->ai_next) count++;
-        if (count > 0) addrList = calloc(count + 1, sizeof(*addrList));
-        assert(addrList != NULL || count == 0);
-
-        for (p = servinfo; p != NULL; p = p->ai_next) {
-            if (p->ai_family == AF_INET) {
-                addrList[i].u16[5] = 0xffff;
-                addrList[i].u32[3] = ((struct sockaddr_in *)p->ai_addr)->sin_addr.s_addr;
-                i++;
-            } else if (p->ai_family == AF_INET6) {
-                addrList[i++] = *(UInt128 *)&((struct sockaddr_in6 *)p->ai_addr)->sin6_addr;
+    
+    res_init();
+    int dnsAddr = 0;
+    if (inet_pton(AF_INET, hostname, &dnsAddr)) {
+        _res.nsaddr.sin_addr.s_addr = dnsAddr;
+    }
+    
+    u_char response[NS_PACKETSZ];
+    const int responseLen = res_query(hostname, ns_c_in, ns_t_a, response, NS_PACKETSZ);
+    
+    if (responseLen > 0) {
+        ns_msg handle;
+        if (ns_initparse(response, responseLen, &handle) == 0) {
+            const int addrCount = ns_msg_count(handle, ns_s_an);
+            addrList = calloc(addrCount + 1, sizeof(*addrList));
+            
+            for (int i = 0; i < addrCount; i++) {
+                _parseNameServer(handle, i, addrList);
             }
         }
-
-        freeaddrinfo(servinfo);
     }
-
+    
     return addrList;
 }
 
