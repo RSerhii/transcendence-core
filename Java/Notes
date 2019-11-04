@@ -78,6 +78,7 @@ include_directories(src/main/jni/breadwallet-core/)
 include_directories(src/main/jni/breadwallet-core/secp256k1/include)
 include_directories(src/main/jni/breadwallet-core/secp256k1/src)
 include_directories(src/main/jni/breadwallet-core/secp256k1)
+include_directories(src/main/jni/breadwallet-core/libresolv)
 
 # -----------
 #

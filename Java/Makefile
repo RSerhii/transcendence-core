@@ -75,6 +75,8 @@ CFLAGS=-I$(JAVA_HOME)/include \
 	-I$(CINC_DIR)/malloc \
 	-I.. \
 	-I../secp256k1 \
+	-I../libresolv \
+    -lresolv \
 	-Wno-nullability-completeness -Wno-format-extra-args -Wno-unknown-warning-option
 
 compile: $(JNI_LIB) java_comp
