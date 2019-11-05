@@ -38,6 +38,7 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <resolv.h>
 
 #define PROTOCOL_TIMEOUT      20.0
