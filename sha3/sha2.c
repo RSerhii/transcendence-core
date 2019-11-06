@@ -473,8 +473,6 @@ static inline void sha256d_ms(uint32_t *hash, uint32_t *W,
 }
 */
 
-#endif /* EXTERN_SHA256 */
-
 #if HAVE_SHA256_4WAY
 
 void sha256d_ms_4way(uint32_t *hash,  uint32_t *data,
@@ -533,6 +531,8 @@ static inline int scanhash_sha256d_4way(int thr_id, uint32_t *pdata,
 }
 
 #endif /* HAVE_SHA256_4WAY */
+
+#endif /* EXTERN_SHA256 */
 
 #if HAVE_SHA256_8WAY
 
