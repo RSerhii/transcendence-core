@@ -200,6 +200,7 @@ static void sha256d_80_swap(uint32_t *hash, const uint32_t *data)
 }
 */
 
+#ifndef EXTERN_SHA256
 void sha256d(unsigned char *hash, const unsigned char *data, int len)
 {
 	uint32_t S[16], T[16];
@@ -224,6 +225,7 @@ void sha256d(unsigned char *hash, const unsigned char *data, int len)
 //    for (i = 0; i < 8; i++)
 //        be32enc((uint32_t *)hash + i, T[i]);
 }
+#endif /* EXTERN_SHA256 */
 
 /*
 static inline void sha256d_preextend(uint32_t *W)
