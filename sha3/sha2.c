@@ -200,6 +200,7 @@ static void sha256d_80_swap(uint32_t *hash, const uint32_t *data)
 }
 */
 
+#ifndef EXTERN_SHA256
 void sha256d(unsigned char *hash, const unsigned char *data, int len)
 {
 	uint32_t S[16], T[16];
@@ -224,6 +225,7 @@ void sha256d(unsigned char *hash, const unsigned char *data, int len)
 //    for (i = 0; i < 8; i++)
 //        be32enc((uint32_t *)hash + i, T[i]);
 }
+#endif /* EXTERN_SHA256 */
 
 /*
 static inline void sha256d_preextend(uint32_t *W)
@@ -471,8 +473,6 @@ static inline void sha256d_ms(uint32_t *hash, uint32_t *W,
 }
 */
 
-#endif /* EXTERN_SHA256 */
-
 #if HAVE_SHA256_4WAY
 
 void sha256d_ms_4way(uint32_t *hash,  uint32_t *data,
@@ -531,6 +531,8 @@ static inline int scanhash_sha256d_4way(int thr_id, uint32_t *pdata,
 }
 
 #endif /* HAVE_SHA256_4WAY */
+
+#endif /* EXTERN_SHA256 */
 
 #if HAVE_SHA256_8WAY
 
